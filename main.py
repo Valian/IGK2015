@@ -31,11 +31,7 @@ class Game:
         self.window = sf.RenderWindow(sf.VideoMode(WWIDTH, WHEIGHT), WTITLE, sf.Style.CLOSE | sf.Style.TITLEBAR,
                                       SETTINGS)
         self.window.framerate_limit = 60
-        self.bonus_manager = BonusManager(self.window,
-            {'life': sf.Texture.from_file("assets/images/heart.png"),
-             'bullet': sf.Texture.from_file("assets/images/bulletBonus.png"),
-             'immortality': sf.Texture.from_file("assets/images/heart.png")},
-            )
+
         SoundManager.play_background_music()
 
         # Clock
@@ -52,13 +48,13 @@ class Game:
         self.collision_manager = CollisionManager()
         self.bonus_manager = BonusManager(self.window, {
              'life': sf.Texture.from_file("assets/images/red03.png"),
-             'bullet': sf.Texture.from_file("assets/images/green03.png"),
-             'immortality': sf.Texture.from_file("assets/images/green03.png")
+             'bullet': sf.Texture.from_file("assets/images/bulletBonus.png"),
+             'immortality': sf.Texture.from_file("assets/images/heart.png")
         }, self.collision_manager)
 
         self.obstacles = self.create_obstacles()
         self.bases = self.create_bases()
-        self.player_manager = PlayerManager(self.window.size, DIST_FROM_BASE, self.textures['plane'], self.textures['plane'],  SPEED)
+        self.player_manager = PlayerManager(self.window.size, DIST_FROM_BASE, self.textures['plane'], self.textures['human'],  SPEED)
 
         self.obstacles = list(self.create_obstacles())
         self.stopped = False
@@ -128,6 +124,7 @@ class Game:
                 'red': sf.Texture.from_file("assets/images/red03.png"),
                 'green': sf.Texture.from_file("assets/images/green03.png"),
                 'plane': sf.Texture.from_file("assets/images/plane_sheet.png"),
+                'human': sf.Texture.from_file("assets/images/human_sheet.png"),
                 'aliens_win': sf.Texture.from_file("assets/images/aliens_win.png"),
                 'humans_win': sf.Texture.from_file("assets/images/humans_win.png")
             }

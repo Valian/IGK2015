@@ -3,7 +3,7 @@ import sfml as sf
 from soundmanager import Instance as SoundManager
 from utils import create_sprite
 
-_bullet_tex = sf.Texture.from_file("assets/images/red03.png")
+_bullet_tex = sf.Texture.from_file("assets/images/bullet.png")
 window_rectangle = sf.Rectangle((0, 0), (1200, 750))
 
 
@@ -37,7 +37,7 @@ class Bullet(Collidable):
         self.sprite.move(sf.Vector2(self.speed, 0) * elapsed_time)
 
         if not window_rectangle.contains(self.sprite.position):
-            SoundManager.play_explosion_sound()
+            #SoundManager.play_explosion_sound()
             self.alive = False
 
     def render(self, window):
