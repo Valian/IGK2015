@@ -73,27 +73,36 @@ class Player(object):
         self.plane.position = self.starting_position
         self.plane_speed = sf.Vector2(speed, 0)
 
+        self.is_dead = False
         self.jump_time = None
         self.plane_jumped = False
 
     def jump(self):
+
+        self.is_dead = False
+
         if not self.plane_jumped:
             self.plane_jumped = True
             self.jump_time = sf.Clock()
 
     def render(self, window):
-        window.draw(self.plane)
+        if not self.is_dead:
+            window.draw(self.plane)
 
     def reset(self):
         self.plane.position = self.starting_position
         self.plane_speed = sf.Vector2(self.speed, 0)
 
+        self.is_dead = True
         self.jump_time = None
         self.plane_jumped = False
         self.plane.rotation = 0
 
     def update(self, elapsed_time):
         self.check_bounds()
+
+        if self.is_dead:
+            return
 
         if not self.plane_jumped and (self.plane.rotation <= 60 or self.plane.rotation >= 300):
             self.plane.rotate(1.25)
