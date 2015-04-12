@@ -3,15 +3,18 @@
 
 import sfml as sf
 import sys
+from player import PlayerManager
 from utils import *
 from animation import *
 from obstacle import ObstacleLine
 
-WWIDTH, WHEIGHT = 800, 1000
+WWIDTH, WHEIGHT = 1200, 750
 WTITLE = "IGK 2015"
+DIST_FROM_BASE = 100
+SPEED = 200
+
 SETTINGS = sf.ContextSettings()
 SETTINGS.antialiasing_level = 8
-GRAVITY = 10.0
 
 
 class Game:
@@ -32,6 +35,8 @@ class Game:
         self.textures = self.load_assets()
         self.bg = create_sprite(self.textures['bg'], WWIDTH, WHEIGHT)
 
+        self.player_manager = PlayerManager(self.window.size, DIST_FROM_BASE, self.textures['plane'], SPEED)
+
         self.obstacles = self.create_obstacles()
 
     def run(self):
@@ -48,16 +53,20 @@ class Game:
     def handle_events(self, event):
         if type(event) is sf.CloseEvent:
             self.window.close()
-
+        else:
+            self.player_manager.handle_event(event)
 
     def update(self, elapsed_time):
         for obstacle in self.obstacles:
             obstacle.update(self.window.size.y, elapsed_time)
 
+        self.player_manager.update(elapsed_time)
+
     def render(self):
         self.window.clear()
 
-        #self.window.draw(self.bg)
+        self.window.draw(self.bg)
+        self.player_manager.render(self.window)
         for obstacle in self.obstacles:
             obstacle.render(self.window)
 
@@ -68,7 +77,8 @@ class Game:
         try:
             return {
                 'bg': sf.Texture.from_file("assets/images/background.png"),
-                'obstacle': sf.Texture.from_file("assets/images/rock-up.png")
+                'obstacle': sf.Texture.from_file("assets/images/rock-up.png"),
+                'plane': sf.Texture.from_file("assets/images/plane_sheet.png")
             }
         except IOError:
             sys.exit(1)
