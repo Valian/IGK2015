@@ -47,7 +47,7 @@ class Game:
 
         self.obstacles = self.create_obstacles()
         self.bases = self.create_bases()
-        self.player_manager = PlayerManager(self.window.size, DIST_FROM_BASE, self.textures['plane'], SPEED)
+        self.player_manager = PlayerManager(self.window.size, DIST_FROM_BASE, self.textures['plane'], self.textures['plane'],  SPEED)
 
         self.obstacles = list(self.create_obstacles())
         self.stopped = False

@@ -1,6 +1,7 @@
 import sfml as sf
 import random
 from animation import Animation, AnimatedSprite
+from soundmanager import Instance as SoundManager
 from collisions import Collidable
 from obstacle import ObstacleLine
 
@@ -15,10 +16,11 @@ GRAVITY = 10.0
 
 class PlayerManager(object):
 
-    def __init__(self, window_size, distance_from_base, texture, speed):
+    def __init__(self, window_size, distance_from_base, first_player_tex, second_player_tex, speed):
         self.window_rect = sf.Rectangle((0, 0), (window_size.x, window_size.y))
         self.speed = speed
-        self.texture = texture
+        self.first_player_tex = first_player_tex
+        self.second_player_tex = second_player_tex
         self.left_pos = distance_from_base
         self.right_pos = window_size.x - distance_from_base
         self.min_y = PADDING
@@ -38,8 +40,9 @@ class PlayerManager(object):
 
     def create_player(self, key, collision_manager):
         side = 1 if len(self.players_by_key) % 2 == 0 else -1
+        tex = self.first_player_tex if len(self.players_by_key) % 2 == 0 else self.second_player_tex
         starting_pos = (self.left_pos if side > 0 else self.right_pos, random.randint(self.min_y, self.max_y))
-        self.players_by_key[key] = Player(self.speed * side, starting_pos, self.texture, self.window_rect)
+        self.players_by_key[key] = Player(self.speed * side, starting_pos, tex, self.window_rect)
         collision_manager.add(self.players_by_key[key])
 
     def update(self, elapsed_time):
@@ -79,6 +82,7 @@ class Player(Collidable):
         self.is_dead = False
         self.jump_time = None
         self.plane_jumped = False
+        SoundManager.play_player_appear_sound()
 
     def get_bounding_rects(self):
         if self.is_dead:
@@ -90,11 +94,14 @@ class Player(Collidable):
 
     def collide(self, other):
         if isinstance(other, ObstacleLine) or (isinstance(other, Player) and self.direction != other.direction):
+            if not isinstance(other, ObstacleLine):
+                SoundManager.play_death_sound()
             self.reset()
 
     def jump(self):
-
-        self.is_dead = False
+        if self.is_dead:
+            self.is_dead = False
+            SoundManager.play_player_appear_sound()
 
         if not self.plane_jumped:
             self.plane_jumped = True

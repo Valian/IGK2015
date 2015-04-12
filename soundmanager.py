@@ -7,10 +7,12 @@ class SoundManager():
         pass
 
     def init_sound(self):
-        return {'music': sf.Music.from_file('assets/music/music.wav'),
+        return {
+            'music': sf.Music.from_file('assets/music/music.wav'),
             'plop': sf.Music.from_file('assets/music/plop.wav'),
             'death': sf.Music.from_file('assets/music/death.wav'),
-            'expl': sf.Music.from_file('assets/music/expl.wav')}
+            'expl': sf.Music.from_file('assets/music/expl.wav')
+        }
 
     def play_background_music(self):
         bmusic = self.sounds['music']

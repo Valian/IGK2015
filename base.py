@@ -1,6 +1,7 @@
 import sfml as sf
 from collisions import Collidable
 from player import Player
+from soundmanager import Instance as SoundManager
 import utils
 tile_width = 20
 
@@ -43,6 +44,7 @@ class Base(Collidable):
                 if not tile.texture == self.red_texture:
                     tile.texture = self.red_texture
                     self.lives -= 1
+                    SoundManager.play_explosion_sound()
                 break
 
 
