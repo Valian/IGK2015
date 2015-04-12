@@ -35,13 +35,13 @@ class CollisionManager(object):
 
                 for a in rects1:
                     for b in rects2:
-                        if intersects(a, b):
+                        if a and b and intersects(a, b):
                             self.objects[i].collide(self.objects[j])
                             self.objects[j].collide(self.objects[i])
 
     @staticmethod
     def _to_iterable(object):
-        if isinstance(object, sf.Rectangle):
+        if not object or isinstance(object, sf.Rectangle):
             return [object]
         else:
             return list(object)

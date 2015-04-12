@@ -17,7 +17,7 @@ WWIDTH, WHEIGHT = 1200, 750
 WTITLE = "IGK 2015"
 NUMBER_OF_OBSTACLES = 3
 DIST_FROM_BASE = 100
-SPEED = 500
+SPEED = 200
 
 SETTINGS = sf.ContextSettings()
 SETTINGS.antialiasing_level = 8
@@ -50,6 +50,11 @@ class Game:
         self.bg = create_sprite(self.textures['bg'], WWIDTH, WHEIGHT, (0, 0))
 
         self.collision_manager = CollisionManager()
+        self.bonus_manager = BonusManager(self.window, {
+             'life': sf.Texture.from_file("assets/images/red03.png"),
+             'bullet': sf.Texture.from_file("assets/images/green03.png"),
+             'immortality': sf.Texture.from_file("assets/images/green03.png")
+        }, self.collision_manager)
 
         self.obstacles = self.create_obstacles()
         self.bases = self.create_bases()
@@ -133,8 +138,8 @@ class Game:
         for i in xrange(1, NUMBER_OF_OBSTACLES + 1):
             x_pos = DIST_FROM_BASE + (WWIDTH * 1.0 - 2 * DIST_FROM_BASE) * i / (NUMBER_OF_OBSTACLES + 1)
             print x_pos
-            obstacle = ObstacleLine(random.randint(20, 60), 50, x_pos, texture=self.textures['obstacle'])
-            #self.collision_manager.add(obstacle)
+            obstacle = ObstacleLine(random.randint(20, 80), 50, x_pos, texture=self.textures['obstacle'])
+            self.collision_manager.add(obstacle)
             yield obstacle
 
     def create_bases(self):
