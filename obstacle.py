@@ -11,6 +11,7 @@ maxSpace = 100
 start_y_position = -100
 end_y_position_offset = 100
 
+
 class ObstacleLine(object):
     def __init__(self, speed, width, position, texture):
         self.fragCount = randint(minFragCount, maxFragCount)

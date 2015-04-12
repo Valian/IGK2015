@@ -6,12 +6,14 @@ import sys
 from utils import *
 from animation import *
 from obstacle import ObstacleLine
+from Base import Base
 
 WWIDTH, WHEIGHT = 550, 700
 WTITLE = "IGK 2015"
 SETTINGS = sf.ContextSettings()
 SETTINGS.antialiasing_level = 8
 GRAVITY = 10.0
+LIVES = 10
 
 
 class Game:
@@ -33,6 +35,7 @@ class Game:
         self.bg = create_sprite(self.textures['bg'], WWIDTH, WHEIGHT, (0,0))
 
         self.obstacles = self.create_obstacles()
+        self.bases = self.create_bases()
 
     def run(self):
         while self.window.is_open:
@@ -60,6 +63,8 @@ class Game:
         self.window.draw(self.bg)
         for obstacle in self.obstacles:
             obstacle.render(self.window)
+        for base in self.bases:
+            base.render(self.window)
 
         self.window.display()
 
@@ -68,7 +73,9 @@ class Game:
         try:
             return {
                 'bg': sf.Texture.from_file("assets/images/background.png"),
-                'obstacle': sf.Texture.from_file("assets/images/rock-up.png")
+                'obstacle': sf.Texture.from_file("assets/images/rock-up.png"),
+                'red': sf.Texture.from_file("assets/images/red03.png"),
+                'green': sf.Texture.from_file("assets/images/green03.png")
             }
         except IOError:
             sys.exit(1)
@@ -78,6 +85,10 @@ class Game:
                      ObstacleLine(300, 50, 200, texture=self.textures['obstacle'])]
 
         return obstacles
+
+    def create_bases(self):
+        return [Base("left", LIVES, self.textures['red'], self.textures['green'], self.window.height, self.window.width),
+                Base("right", LIVES, self.textures['red'], self.textures['green'], self.window.height, self.window.width)]
 
 
 if __name__ == '__main__':
