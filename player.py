@@ -15,6 +15,7 @@ GRAVITY = 10.0
 class PlayerManager(object):
 
     def __init__(self, window_size, distance_from_base, texture, speed):
+        self.window_rect = sf.Rectangle((0, 0), (window_size.x, window_size.y))
         self.speed = speed
         self.texture = texture
         self.left_pos = distance_from_base
@@ -37,7 +38,7 @@ class PlayerManager(object):
     def create_player(self, key):
         side = 1 if len(self.players_by_key) % 2 == 0 else -1
         starting_pos = (self.left_pos if side > 0 else self.right_pos, random.randint(self.min_y, self.max_y))
-        self.players_by_key[key] = Player(self.speed * side, starting_pos, self.texture)
+        self.players_by_key[key] = Player(self.speed * side, starting_pos, self.texture, self.window_rect)
 
     def update(self, elapsed_time):
         for key, player in self.players_by_key.iteritems():
@@ -50,7 +51,8 @@ class PlayerManager(object):
 
 class Player(object):
 
-    def __init__(self, speed, starting_position, texture):
+    def __init__(self, speed, starting_position, texture, window_rectangle):
+        self.window_rectangle = window_rectangle
         self.starting_position = starting_position
         self.speed = speed
         self.direction = 1 if speed > 0 else -1
@@ -65,11 +67,11 @@ class Player(object):
 
         self.plane = AnimatedSprite(sf.seconds(0.2), False, True)
         self.plane.play(fly_anim)
+        self.plane.size = self.plane.global_bounds.width, self.plane.global_bounds.height
         self.plane.origin = self.plane.global_bounds.width / 2.0, self.plane.global_bounds.height / 2.0
         self.plane.scale((self.direction, 1))
 
-        self.plane.position = starting_position
-
+        self.plane.position = self.starting_position
         self.plane_speed = sf.Vector2(speed, 0)
 
         self.jump_time = None
@@ -83,8 +85,17 @@ class Player(object):
     def render(self, window):
         window.draw(self.plane)
 
+    def reset(self):
+        self.plane.position = self.starting_position
+        self.plane_speed = sf.Vector2(self.speed, 0)
+
+        self.jump_time = None
+        self.plane_jumped = False
+        self.plane.rotation = 0
+
     def update(self, elapsed_time):
-        # Plane
+        self.check_bounds()
+
         if not self.plane_jumped and (self.plane.rotation <= 60 or self.plane.rotation >= 300):
             self.plane.rotate(1.25)
 
@@ -104,3 +115,8 @@ class Player(object):
 
         self.plane.move(self.plane_speed * elapsed_time)
         self.plane.update(sf.seconds(elapsed_time))
+
+    def check_bounds(self):
+        if not self.window_rectangle.contains(self.plane.position):
+            self.reset()
+
