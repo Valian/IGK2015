@@ -1,6 +1,7 @@
 import sfml as sf
 import random
 from animation import Animation, AnimatedSprite
+from bonus import Bonus, BonusType, IMMORTAL_TIME
 from soundmanager import Instance as SoundManager
 from collisions import Collidable
 from obstacle import ObstacleLine
@@ -82,21 +83,28 @@ class Player(Collidable):
         self.is_dead = False
         self.jump_time = None
         self.plane_jumped = False
+
+        self.immortal = None
         SoundManager.play_player_appear_sound()
 
     def get_bounding_rects(self):
-        if self.is_dead:
-            return sf.Rectangle()
-        else:
+        if not self.is_dead:
             p = self.plane.position
             s = self.plane.size
             return sf.Rectangle((p.x - s.x / 3, p.y - s.y / 3), (s.x / 1.5, s.y/1.5))
 
     def collide(self, other):
         if isinstance(other, ObstacleLine) or (isinstance(other, Player) and self.direction != other.direction):
+            if self.immortal:
+                return
+
             if not isinstance(other, ObstacleLine):
                 SoundManager.play_death_sound()
             self.reset()
+        elif isinstance(other, Bonus):
+            if other.type == BonusType.IMMORTALITY:
+                self.immortal = sf.Clock()
+                self.plane.color = sf.Color(255, 255, 255)
 
     def jump(self):
         if self.is_dead:
@@ -119,6 +127,7 @@ class Player(Collidable):
         self.jump_time = None
         self.plane_jumped = False
         self.plane.rotation = 0
+        self.immortal = None
 
     def update(self, elapsed_time):
         self.check_bounds()
@@ -128,6 +137,10 @@ class Player(Collidable):
 
         if not self.plane_jumped and (self.plane.rotation <= 60 or self.plane.rotation >= 300):
             self.plane.rotate(1.25 * self.direction)
+
+        if self.immortal and self.immortal.elapsed_time.seconds > IMMORTAL_TIME:
+            self.immortal = None
+            self.plane.color = sf.Color(255, 255, 255, 255)
 
         if self.plane_jumped:
             self.plane_speed.y = -200.0

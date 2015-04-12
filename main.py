@@ -31,11 +31,6 @@ class Game:
         self.window = sf.RenderWindow(sf.VideoMode(WWIDTH, WHEIGHT), WTITLE, sf.Style.CLOSE | sf.Style.TITLEBAR,
                                       SETTINGS)
         self.window.framerate_limit = 60
-        self.bonus_manager = BonusManager(self.window,
-            {'life': sf.Texture.from_file("assets/images/red03.png"),
-             'bullet': sf.Texture.from_file("assets/images/green03.png"),
-             'immortality': sf.Texture.from_file("assets/images/green03.png")},
-            )
         SoundManager.play_background_music()
 
         # Clock
@@ -50,6 +45,11 @@ class Game:
         self.bg = create_sprite(self.textures['bg'], WWIDTH, WHEIGHT, (0, 0))
 
         self.collision_manager = CollisionManager()
+        self.bonus_manager = BonusManager(self.window, {
+             'life': sf.Texture.from_file("assets/images/red03.png"),
+             'bullet': sf.Texture.from_file("assets/images/green03.png"),
+             'immortality': sf.Texture.from_file("assets/images/green03.png")
+        }, self.collision_manager)
 
         self.obstacles = self.create_obstacles()
         self.bases = self.create_bases()
