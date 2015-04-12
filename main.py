@@ -45,7 +45,7 @@ class Game:
 
         self.obstacles = list(self.create_obstacles())
         self.stopped = False
-        self.gameover = create_sprite(self.textures['left'], self.window.width, self.window.height, (0, 0))
+        self.gameover = create_sprite(self.textures['aliens_win'], self.window.width, self.window.height, (0, 0))
 
     def run(self):
         while self.window.is_open:
