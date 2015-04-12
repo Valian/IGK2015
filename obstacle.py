@@ -30,9 +30,9 @@ class ObstacleLine(object):
 
     def render(self, window):
         for sprite in self.obstacles:
-            print sprite.position, sprite.ratio
             window.draw(sprite)
 
+        
     def create_fragments(self):
         ypos = start_y_position
         for i in range(0, self.fragCount):
