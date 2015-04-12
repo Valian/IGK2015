@@ -38,10 +38,8 @@ class Base(Collidable):
 
     def hit(self, hitpoint):
         print hitpoint
-
-        self.lives -= 1
         for tile in self.life_tiles:
-            if tile.local_bounds.position.y <= hitpoint <= tile.local_bounds.position.y + tile.local_bounds.height:
+            if tile.global_bounds.position.y <= hitpoint <= tile.global_bounds.position.y + tile.global_bounds.height:
                 if not tile.texture == self.red_texture:
                     tile.texture = self.red_texture
                     self.lives -= 1

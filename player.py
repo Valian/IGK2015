@@ -2,6 +2,7 @@ import sfml as sf
 import random
 from animation import Animation, AnimatedSprite
 from collisions import Collidable
+from obstacle import ObstacleLine
 
 
 LEFT_SIDE = 1
@@ -87,10 +88,9 @@ class Player(Collidable):
             s = self.plane.size
             return sf.Rectangle((p.x - s.x / 2, p.y - s.y/2), (s.x / 2, s.y/2))
 
-
     def collide(self, other):
-        #print "collision with " + str(other)
-        self.reset()
+        if isinstance(other, ObstacleLine) or (isinstance(other, Player) and self.direction != other.direction):
+            self.reset()
 
     def jump(self):
 
