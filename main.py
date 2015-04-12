@@ -10,6 +10,7 @@ from obstacle import ObstacleLine
 
 WWIDTH, WHEIGHT = 1200, 750
 WTITLE = "IGK 2015"
+NUMBER_OF_OBSTACLES = 4
 DIST_FROM_BASE = 100
 SPEED = 200
 
@@ -33,11 +34,11 @@ class Game:
 
         # Loading assets
         self.textures = self.load_assets()
-        self.bg = create_sprite(self.textures['bg'], WWIDTH, WHEIGHT)
+        self.bg = create_sprite(self.textures['bg'], WWIDTH, WHEIGHT, (0,0))
 
         self.player_manager = PlayerManager(self.window.size, DIST_FROM_BASE, self.textures['plane'], SPEED)
 
-        self.obstacles = self.create_obstacles()
+        self.obstacles = list(self.create_obstacles())
 
     def run(self):
         while self.window.is_open:
@@ -84,8 +85,10 @@ class Game:
             sys.exit(1)
 
     def create_obstacles(self):
-        obstacles = [ObstacleLine(10, 100, 200, texture=self.textures['obstacle'])]
-        return obstacles
+        for i in xrange(1, NUMBER_OF_OBSTACLES + 1):
+            x_pos = DIST_FROM_BASE + (WWIDTH * 1.0 - 2 * DIST_FROM_BASE) * i / (NUMBER_OF_OBSTACLES + 1)
+            print x_pos
+            yield ObstacleLine(200, 50, x_pos, texture=self.textures['obstacle'])
 
 
 if __name__ == '__main__':
