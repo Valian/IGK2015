@@ -33,9 +33,9 @@ class CollisionManager(object):
                 rects1 = self._to_iterable(self.objects[i].get_bounding_rects())
                 rects2 = self._to_iterable(self.objects[j].get_bounding_rects())
 
-                for a in xrange(len(rects1)):
-                    for b in xrange(len(rects2)):
-                        if intersects(rects1[a], rects2[b]):
+                for a in rects1:
+                    for b in rects2:
+                        if intersects(a, b):
                             self.objects[i].collide(self.objects[j])
                             self.objects[j].collide(self.objects[i])
 
@@ -45,7 +45,6 @@ class CollisionManager(object):
             return [object]
         else:
             return list(object)
-
 
 
 

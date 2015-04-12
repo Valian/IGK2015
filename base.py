@@ -1,5 +1,6 @@
 import sfml as sf
 from collisions import Collidable
+from player import Player
 import utils
 tile_width = 20
 
@@ -9,7 +10,9 @@ class Base(Collidable):
         return [t.global_bounds for t in self.life_tiles]
 
     def collide(self, other):
-        self.hit(other.plane.position.y)
+
+        if isinstance(other, Player):
+            self.hit(other.plane.position.y)
 
     def __init__(self, id, lives, red_texture, green_texture, window_height, window_width):
         self.red_texture = red_texture
@@ -34,6 +37,8 @@ class Base(Collidable):
             window.draw(sprite)
 
     def hit(self, hitpoint):
+        print hitpoint
+
         self.lives -= 1
         for tile in self.life_tiles:
             if tile.local_bounds.position.y <= hitpoint <= tile.local_bounds.position.y + tile.local_bounds.height:

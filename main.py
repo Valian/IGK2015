@@ -14,7 +14,7 @@ WWIDTH, WHEIGHT = 1200, 750
 WTITLE = "IGK 2015"
 NUMBER_OF_OBSTACLES = 4
 DIST_FROM_BASE = 100
-SPEED = 200
+SPEED = 800
 
 SETTINGS = sf.ContextSettings()
 SETTINGS.antialiasing_level = 8
@@ -49,6 +49,7 @@ class Game:
         self.obstacles = list(self.create_obstacles())
         self.stopped = False
         self.gameover = create_sprite(self.textures['aliens_win'], self.window.width, self.window.height, (0, 0))
+
 
     def run(self):
         while self.window.is_open:
@@ -123,7 +124,7 @@ class Game:
             x_pos = DIST_FROM_BASE + (WWIDTH * 1.0 - 2 * DIST_FROM_BASE) * i / (NUMBER_OF_OBSTACLES + 1)
             print x_pos
             obstacle = ObstacleLine(200, 50, x_pos, texture=self.textures['obstacle'])
-            #self.collision_manager.add(obstacle)
+            self.collision_manager.add(obstacle)
             yield obstacle
 
     def create_bases(self):
