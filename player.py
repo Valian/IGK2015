@@ -2,6 +2,7 @@ import sfml as sf
 import random
 from animation import Animation, AnimatedSprite
 from bonus import Bonus, BonusType, IMMORTAL_TIME
+from shot import Bullet
 from soundmanager import Instance as SoundManager
 from collisions import Collidable
 from obstacle import ObstacleLine
@@ -85,6 +86,9 @@ class Player(Collidable):
         self.plane_jumped = False
 
         self.immortal = None
+
+        self.bullets = set()
+
         SoundManager.play_player_appear_sound()
 
     def get_bounding_rects(self):
@@ -105,6 +109,13 @@ class Player(Collidable):
             if other.type == BonusType.IMMORTALITY:
                 self.immortal = sf.Clock()
                 self.plane.color = sf.Color(255, 255, 255)
+            elif other.type == BonusType.BULLET:
+                self.bullets.add(Bullet(self.plane.position, self.speed * 2))
+        elif isinstance(other, Bullet):
+            if self.immortal:
+                return
+            SoundManager.play_death_sound()
+            self.reset()
 
     def jump(self):
         if self.is_dead:
@@ -118,6 +129,8 @@ class Player(Collidable):
     def render(self, window):
         if not self.is_dead:
             window.draw(self.plane)
+        for bullet in self.bullets:
+            bullet.render(window)
 
     def reset(self):
         self.plane.position = self.starting_position
@@ -130,6 +143,8 @@ class Player(Collidable):
         self.immortal = None
 
     def update(self, elapsed_time):
+        for bullet in self.bullets:
+            bullet.update(elapsed_time)
         self.check_bounds()
 
         if self.is_dead:
