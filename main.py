@@ -11,6 +11,7 @@ from animation import *
 from obstacle import ObstacleLine
 from base import Base
 from soundmanager import Instance as SoundManager
+from bonus import BonusManager
 
 WWIDTH, WHEIGHT = 1200, 750
 WTITLE = "IGK 2015"
@@ -30,6 +31,11 @@ class Game:
         self.window = sf.RenderWindow(sf.VideoMode(WWIDTH, WHEIGHT), WTITLE, sf.Style.CLOSE | sf.Style.TITLEBAR,
                                       SETTINGS)
         self.window.framerate_limit = 60
+        self.bonus_manager = BonusManager(self.window,
+            {'life': sf.Texture.from_file("assets/images/red03.png"),
+             'bullet': sf.Texture.from_file("assets/images/green03.png"),
+             'immortality': sf.Texture.from_file("assets/images/green03.png")},
+            )
         SoundManager.play_background_music()
 
         # Clock
@@ -78,10 +84,10 @@ class Game:
         self.player_manager.update(elapsed_time)
         self.collision_manager.update()
         self.check_for_game_end()
+        self.bonus_manager.update(elapsed_time)
 
     def render(self):
         self.window.clear()
-
         self.window.draw(self.bg)
         if not self.stopped:
             self.player_manager.render(self.window)
@@ -92,6 +98,7 @@ class Game:
         else:
             self.window.draw(self.gameover)
 
+        self.bonus_manager.render(self.window)
         self.window.display()
 
     def update_obstacles(self, elapsed_time):
