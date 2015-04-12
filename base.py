@@ -34,10 +34,11 @@ class Base(Collidable):
             window.draw(sprite)
 
     def hit(self, hitpoint):
-        self.lives -= 1
         for tile in self.life_tiles:
             if tile.local_bounds.position.y <= hitpoint <= tile.local_bounds.position.y + tile.local_bounds.height:
-                tile.texture = self.red_texture
+                if not tile.texture == self.red_texture:
+                    tile.texture = self.red_texture
+                    self.lives -= 1
                 break
 
 

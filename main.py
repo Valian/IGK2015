@@ -9,6 +9,7 @@ from utils import *
 from animation import *
 from obstacle import ObstacleLine
 from base import Base
+from soundmanager import SoundManager
 
 WWIDTH, WHEIGHT = 1200, 750
 WTITLE = "IGK 2015"
@@ -28,6 +29,8 @@ class Game:
         self.window = sf.RenderWindow(sf.VideoMode(WWIDTH, WHEIGHT), WTITLE, sf.Style.CLOSE | sf.Style.TITLEBAR,
                                       SETTINGS)
         self.window.framerate_limit = 60
+        self.soundmanager = SoundManager()
+        self.soundmanager.play_background_music()
 
         # Clock
         self.clock = sf.Clock()
