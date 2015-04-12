@@ -32,9 +32,9 @@ class Game:
                                       SETTINGS)
         self.window.framerate_limit = 60
         self.bonus_manager = BonusManager(self.window,
-            {'life': sf.Texture.from_file("assets/images/red03.png"),
-             'bullet': sf.Texture.from_file("assets/images/green03.png"),
-             'immortality': sf.Texture.from_file("assets/images/green03.png")},
+            {'life': sf.Texture.from_file("assets/images/heart.png"),
+             'bullet': sf.Texture.from_file("assets/images/bulletBonus.png"),
+             'immortality': sf.Texture.from_file("assets/images/heart.png")},
             )
         SoundManager.play_background_music()
 
