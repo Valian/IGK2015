@@ -7,6 +7,7 @@ from player import PlayerManager
 from utils import *
 from animation import *
 from obstacle import ObstacleLine
+from Base import Base
 
 WWIDTH, WHEIGHT = 1200, 750
 WTITLE = "IGK 2015"
@@ -16,6 +17,8 @@ SPEED = 200
 
 SETTINGS = sf.ContextSettings()
 SETTINGS.antialiasing_level = 8
+GRAVITY = 10.0
+LIVES = 10
 
 
 class Game:
@@ -36,6 +39,8 @@ class Game:
         self.textures = self.load_assets()
         self.bg = create_sprite(self.textures['bg'], WWIDTH, WHEIGHT, (0,0))
 
+        self.obstacles = self.create_obstacles()
+        self.bases = self.create_bases()
         self.player_manager = PlayerManager(self.window.size, DIST_FROM_BASE, self.textures['plane'], SPEED)
 
         self.obstacles = list(self.create_obstacles())
@@ -70,6 +75,8 @@ class Game:
         self.player_manager.render(self.window)
         for obstacle in self.obstacles:
             obstacle.render(self.window)
+        for base in self.bases:
+            base.render(self.window)
 
         self.window.display()
 
@@ -79,6 +86,8 @@ class Game:
             return {
                 'bg': sf.Texture.from_file("assets/images/background.png"),
                 'obstacle': sf.Texture.from_file("assets/images/rock-up.png"),
+                'red': sf.Texture.from_file("assets/images/red03.png"),
+                'green': sf.Texture.from_file("assets/images/green03.png"),
                 'plane': sf.Texture.from_file("assets/images/plane_sheet.png")
             }
         except IOError:
@@ -89,6 +98,10 @@ class Game:
             x_pos = DIST_FROM_BASE + (WWIDTH * 1.0 - 2 * DIST_FROM_BASE) * i / (NUMBER_OF_OBSTACLES + 1)
             print x_pos
             yield ObstacleLine(200, 50, x_pos, texture=self.textures['obstacle'])
+
+    def create_bases(self):
+        return [Base("left", LIVES, self.textures['red'], self.textures['green'], self.window.height, self.window.width),
+                Base("right", LIVES, self.textures['red'], self.textures['green'], self.window.height, self.window.width)]
 
 
 if __name__ == '__main__':
