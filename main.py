@@ -5,7 +5,7 @@ import sfml as sf
 import sys
 from animation import *
 
-WWIDTH, WHEIGHT = 800, 480
+WWIDTH, WHEIGHT = 800, 600
 WTITLE = "PySFML - Tappy Plane"
 GROUND_SPEED = 200
 SETTINGS = sf.ContextSettings()
