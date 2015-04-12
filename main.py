@@ -7,7 +7,7 @@ from player import PlayerManager
 from utils import *
 from animation import *
 from obstacle import ObstacleLine
-from Base import Base
+from base import Base
 
 WWIDTH, WHEIGHT = 1200, 750
 WTITLE = "IGK 2015"
