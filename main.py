@@ -68,6 +68,7 @@ class Game:
         if not self.stopped:
             self.update_obstacles(elapsed_time)
             self.player_manager.update(elapsed_time)
+            self.check_for_game_end()
 
     def render(self):
         self.window.clear()
