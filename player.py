@@ -75,9 +75,9 @@ class Player(Collidable):
 
         self.plane = AnimatedSprite(sf.seconds(0.2), False, True)
         self.plane.play(fly_anim)
-        self.plane.size = sf.Vector2(self.plane.global_bounds.width, self.plane.global_bounds.height)
+        self.plane.size = sf.Vector2(self.plane.global_bounds.width / 2, self.plane.global_bounds.height / 2)
         self.plane.origin = self.plane.global_bounds.width / 2.0, self.plane.global_bounds.height / 2.0
-        self.plane.scale((self.direction, 1))
+        self.plane.scale((self.direction * 0.5, 0.5))
 
         self.plane.position = self.starting_position
         self.plane_speed = sf.Vector2(speed, 0)
@@ -115,7 +115,7 @@ class Player(Collidable):
                 self.collision_manager.add(bullet)
                 self.bullets.add(bullet)
         elif isinstance(other, Bullet):
-            if self.immortal:
+            if self.immortal or not other.alive:
                 return
             SoundManager.play_death_sound()
             self.reset()

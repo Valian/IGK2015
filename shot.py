@@ -12,7 +12,7 @@ class Bullet(Collidable):
     def get_bounding_rects(self):
         if self.alive:
             p = self.sprite.position
-            s = sf.Vector2(20, 20)
+            s = sf.Vector2(40, 40)
             return sf.Rectangle((p.x - s.x / 2, p.y - s.y / 2), (s.x, s.y))
 
     def collide(self, other):
@@ -30,7 +30,7 @@ class Bullet(Collidable):
     def __init__(self, position, speed):
         self.speed = speed
         self.position = position
-        self.sprite = create_sprite(_bullet_tex, 20, 20, self.position)
+        self.sprite = create_sprite(_bullet_tex, 40, 40, self.position)
         self.alive = True
 
     def update(self, elapsed_time):
