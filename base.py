@@ -3,7 +3,7 @@ from collisions import Collidable
 from player import Player
 from soundmanager import Instance as SoundManager
 import utils
-tile_width = 20
+tile_width = 60
 
 
 class Base(Collidable):

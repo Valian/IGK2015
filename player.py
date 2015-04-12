@@ -114,6 +114,7 @@ class Player(Collidable):
                 bullet = Bullet(self.plane.position, self.speed * 2)
                 self.collision_manager.add(bullet)
                 self.bullets.add(bullet)
+                self.immortal = sf.Clock()
         elif isinstance(other, Bullet):
             if self.immortal or not other.alive:
                 return

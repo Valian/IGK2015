@@ -15,14 +15,14 @@ from bonus import BonusManager
 
 WWIDTH, WHEIGHT = 1200, 750
 WTITLE = "IGK 2015"
-NUMBER_OF_OBSTACLES = 3
+NUMBER_OF_OBSTACLES = 4
 DIST_FROM_BASE = 100
 SPEED = 200
 
 SETTINGS = sf.ContextSettings()
 SETTINGS.antialiasing_level = 8
 GRAVITY = 10.0
-LIVES = 10
+LIVES = 6
 
 
 class Game:
@@ -90,16 +90,17 @@ class Game:
     def render(self):
         self.window.clear()
         self.window.draw(self.bg)
+
         if not self.stopped:
             self.player_manager.render(self.window)
             for obstacle in self.obstacles:
                 obstacle.render(self.window)
             for base in self.bases:
                 base.render(self.window)
+            self.bonus_manager.render(self.window)
         else:
             self.window.draw(self.gameover)
 
-        self.bonus_manager.render(self.window)
         self.window.display()
 
     def update_obstacles(self, elapsed_time):
@@ -109,10 +110,10 @@ class Game:
     def check_for_game_end(self):
         if self.bases[0].lives == 0:
             self.stopped = True
-            self.gameover = create_sprite(self.textures['aliens_win'] if self.bases[0].id == 'left' else self.textures['humans_win'], self.window.width, self.window.height, (0, 0))
+            self.gameover = create_sprite(self.textures['humans_win'] if self.bases[0].id == 'left' else self.textures['aliens_win'], self.window.width, self.window.height, (0, 0))
         if self.bases[1].lives == 0:
             self.stopped = True
-            self.gameover = create_sprite(self.textures['humans_win'] if self.bases[0].id == 'left' else self.textures['aliens_win'], self.window.width, self.window.height, (0, 0))
+            self.gameover = create_sprite(self.textures['aliens_win'] if self.bases[0].id == 'left' else self.textures['humans_win'], self.window.width, self.window.height, (0, 0))
 
 
     @staticmethod
