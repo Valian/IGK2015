@@ -1,6 +1,5 @@
 import sfml as sf
 import random
-from matplotlib.mlab import distances_along_curve
 from animation import Animation, AnimatedSprite
 
 

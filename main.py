@@ -44,6 +44,8 @@ class Game:
         self.player_manager = PlayerManager(self.window.size, DIST_FROM_BASE, self.textures['plane'], SPEED)
 
         self.obstacles = list(self.create_obstacles())
+        self.stopped = False
+        self.gameover = create_sprite(self.textures['left'], self.window.width, self.window.height, (0, 0))
 
     def run(self):
         while self.window.is_open:
@@ -63,32 +65,49 @@ class Game:
             self.player_manager.handle_event(event)
 
     def update(self, elapsed_time):
-        for obstacle in self.obstacles:
-            obstacle.update(self.window.size.y, elapsed_time)
-
-        self.player_manager.update(elapsed_time)
+        if not self.stopped:
+            self.update_obstacles(elapsed_time)
+            self.player_manager.update(elapsed_time)
 
     def render(self):
         self.window.clear()
 
         self.window.draw(self.bg)
-        self.player_manager.render(self.window)
-        for obstacle in self.obstacles:
-            obstacle.render(self.window)
-        for base in self.bases:
-            base.render(self.window)
+        if not self.stopped:
+            self.player_manager.render(self.window)
+            for obstacle in self.obstacles:
+                obstacle.render(self.window)
+            for base in self.bases:
+                base.render(self.window)
+        else:
+            self.window.draw(self.gameover)
 
         self.window.display()
+
+    def update_obstacles(self, elapsed_time):
+        for obstacle in self.obstacles:
+            obstacle.update(self.window.size.y, elapsed_time)
+
+    def check_for_game_end(self):
+        if self.bases[0].lives == 0:
+            self.stopped = True
+            self.gameover = create_sprite(self.textures['aliens_win'] if self.bases[0].id == 'left' else self.textures['humans_win'], self.window.width, self.window.height, (0, 0))
+        if self.bases[1].lives == 0:
+            self.stopped = True
+            self.gameover = create_sprite(self.textures['humans_win'] if self.bases[0].id == 'left' else self.textures['aliens_win'], self.window.width, self.window.height, (0, 0))
+
 
     @staticmethod
     def load_assets():
         try:
             return {
                 'bg': sf.Texture.from_file("assets/images/background.png"),
-                'obstacle': sf.Texture.from_file("assets/images/rock-up.png"),
+                'obstacle': sf.Texture.from_file("assets/images/obstacle.png"),
                 'red': sf.Texture.from_file("assets/images/red03.png"),
                 'green': sf.Texture.from_file("assets/images/green03.png"),
-                'plane': sf.Texture.from_file("assets/images/plane_sheet.png")
+                'plane': sf.Texture.from_file("assets/images/plane_sheet.png"),
+                'aliens_win': sf.Texture.from_file("assets/images/aliens_win.png"),
+                'humans_win': sf.Texture.from_file("assets/images/humans_win.png")
             }
         except IOError:
             sys.exit(1)
