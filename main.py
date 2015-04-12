@@ -5,6 +5,7 @@ import sfml as sf
 import sys
 from utils import *
 from animation import *
+from obstacle import ObstacleLine
 
 WWIDTH, WHEIGHT = 800, 1000
 WTITLE = "IGK 2015"
@@ -31,6 +32,8 @@ class Game:
         self.textures = self.load_assets()
         self.bg = create_sprite(self.textures['bg'], WWIDTH, WHEIGHT)
 
+        self.obstacles = self.create_obstacles()
+
     def run(self):
         while self.window.is_open:
             for event in self.window.events:
@@ -46,23 +49,33 @@ class Game:
         if type(event) is sf.CloseEvent:
             self.window.close()
 
+
     def update(self, elapsed_time):
-        pass
+        for obstacle in self.obstacles:
+            obstacle.update(self.window.size.y, elapsed_time)
 
     def render(self):
         self.window.clear()
 
-        self.window.draw(self.bg)
+        #self.window.draw(self.bg)
+        for obstacle in self.obstacles:
+            obstacle.render(self.window)
+
         self.window.display()
 
     @staticmethod
     def load_assets():
         try:
             return {
-                'bg': sf.Texture.from_file("assets/images/background.png")
+                'bg': sf.Texture.from_file("assets/images/background.png"),
+                'obstacle': sf.Texture.from_file("assets/images/rock-up.png")
             }
         except IOError:
             sys.exit(1)
+
+    def create_obstacles(self):
+        obstacles = [ObstacleLine(10, 100, 200, texture=self.textures['obstacle'])]
+        return obstacles
 
 
 if __name__ == '__main__':
