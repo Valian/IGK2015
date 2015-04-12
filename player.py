@@ -148,5 +148,6 @@ class Player(Collidable):
 
     def check_bounds(self):
         if not self.window_rectangle.contains(self.plane.position):
+            SoundManager.play_death_sound()
             self.reset()
 
