@@ -44,7 +44,7 @@ class PlayerManager(object):
         side = 1 if len(self.players_by_key) % 2 == 0 else -1
         tex = self.first_player_tex if len(self.players_by_key) % 2 == 0 else self.second_player_tex
         starting_pos = (self.left_pos if side > 0 else self.right_pos, random.randint(self.min_y, self.max_y))
-        self.players_by_key[key] = Player(self.speed * side, starting_pos, tex, self.window_rect)
+        self.players_by_key[key] = Player(self.speed * side, starting_pos, tex, self.window_rect, collision_manager)
         collision_manager.add(self.players_by_key[key])
 
     def update(self, elapsed_time):
@@ -58,10 +58,11 @@ class PlayerManager(object):
 
 class Player(Collidable):
 
-    def __init__(self, speed, starting_position, texture, window_rectangle):
+    def __init__(self, speed, starting_position, texture, window_rectangle, collision_manager):
         self.window_rectangle = window_rectangle
         self.starting_position = starting_position
         self.speed = speed
+        self.collision_manager = collision_manager
         self.direction = 1 if speed > 0 else -1
 
         # Plane
@@ -110,7 +111,9 @@ class Player(Collidable):
                 self.immortal = sf.Clock()
                 self.plane.color = sf.Color(255, 255, 255)
             elif other.type == BonusType.BULLET:
-                self.bullets.add(Bullet(self.plane.position, self.speed * 2))
+                bullet = Bullet(self.plane.position, self.speed * 2)
+                self.collision_manager.add(bullet)
+                self.bullets.add(bullet)
         elif isinstance(other, Bullet):
             if self.immortal:
                 return
@@ -145,6 +148,9 @@ class Player(Collidable):
     def update(self, elapsed_time):
         for bullet in self.bullets:
             bullet.update(elapsed_time)
+
+
+
         self.check_bounds()
 
         if self.is_dead:
