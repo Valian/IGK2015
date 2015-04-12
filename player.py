@@ -68,7 +68,7 @@ class Player(Collidable):
 
         self.plane = AnimatedSprite(sf.seconds(0.2), False, True)
         self.plane.play(fly_anim)
-        self.plane.size = self.plane.global_bounds.width, self.plane.global_bounds.height
+        self.plane.size = sf.Vector2(self.plane.global_bounds.width, self.plane.global_bounds.height)
         self.plane.origin = self.plane.global_bounds.width / 2.0, self.plane.global_bounds.height / 2.0
         self.plane.scale((self.direction, 1))
 
@@ -83,10 +83,13 @@ class Player(Collidable):
         if self.is_dead:
             return sf.Rectangle()
         else:
-            return self.plane.global_bounds
+            p = self.plane.position
+            s = self.plane.size
+            return sf.Rectangle((p.x - s.x / 2, p.y - s.y/2), (s.x / 2, s.y/2))
+
 
     def collide(self, other):
-        print "collision with " + str(other)
+        #print "collision with " + str(other)
         self.reset()
 
     def jump(self):
