@@ -1,5 +1,6 @@
 from random import randint
 import sfml as sf
+from collisions import Collidable
 import utils
 
 maxFragCount = 10
@@ -12,7 +13,14 @@ start_y_position = -100
 end_y_position_offset = 100
 
 
-class ObstacleLine(object):
+class ObstacleLine(Collidable):
+    def get_bounding_rects(self):
+        for obs in self.obstacles:
+            yield obs.global_bounds
+
+    def collide(self, other):
+        pass
+
     def __init__(self, speed, width, position, texture):
         self.fragCount = randint(minFragCount, maxFragCount)
         self.xPosition = position
@@ -31,7 +39,6 @@ class ObstacleLine(object):
     def render(self, window):
         for sprite in self.obstacles:
             window.draw(sprite)
-
 
     def create_fragments(self):
         ypos = start_y_position

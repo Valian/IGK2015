@@ -1,8 +1,16 @@
 import sfml as sf
+from collisions import Collidable
 import utils
 tile_width = 20
 
-class Base(object):
+
+class Base(Collidable):
+    def get_bounding_rects(self):
+        return [t.global_bounds for t in self.life_tiles]
+
+    def collide(self, other):
+        self.hit(other.plane.position.y)
+
     def __init__(self, id, lives, red_texture, green_texture, window_height, window_width):
         self.red_texture = red_texture
         self.green_texture = green_texture

@@ -8,16 +8,12 @@ def create_sprite(texture, width, heigth, position):
     return sprite
 
 
-def intersects(self, rectangle):
-    # make sure the rectangle is a rectangle (to get its right/bottom border)
-    l, t, w, h = rectangle
-    rectangle = sf.Rectangle((l, t), (w, h))
-
+def intersects(rect1, rect2):
     # compute the intersection boundaries
-    left = max(self.left, rectangle.left)
-    top = max(self.top, rectangle.top)
-    right = min(self.right, rectangle.right)
-    bottom = min(self.bottom, rectangle.bottom)
+    left = max(rect1.left, rect2.left)
+    top = max(rect1.top, rect2.top)
+    right = min(rect1.right, rect2.right)
+    bottom = min(rect1.bottom, rect2.bottom)
 
     # if the intersection is valid (positive non zero area), then
     # there is an intersection

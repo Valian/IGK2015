@@ -3,6 +3,7 @@
 
 import sfml as sf
 import sys
+from collisions import CollisionManager
 from player import PlayerManager
 from utils import *
 from animation import *
@@ -37,7 +38,9 @@ class Game:
 
         # Loading assets
         self.textures = self.load_assets()
-        self.bg = create_sprite(self.textures['bg'], WWIDTH, WHEIGHT, (0,0))
+        self.bg = create_sprite(self.textures['bg'], WWIDTH, WHEIGHT, (0, 0))
+
+        self.collision_manager = CollisionManager()
 
         self.obstacles = self.create_obstacles()
         self.bases = self.create_bases()
@@ -60,13 +63,14 @@ class Game:
         if type(event) is sf.CloseEvent:
             self.window.close()
         else:
-            self.player_manager.handle_event(event)
+            self.player_manager.handle_event(event, self.collision_manager)
 
     def update(self, elapsed_time):
         for obstacle in self.obstacles:
             obstacle.update(self.window.size.y, elapsed_time)
 
         self.player_manager.update(elapsed_time)
+        self.collision_manager.update()
 
     def render(self):
         self.window.clear()
@@ -97,11 +101,18 @@ class Game:
         for i in xrange(1, NUMBER_OF_OBSTACLES + 1):
             x_pos = DIST_FROM_BASE + (WWIDTH * 1.0 - 2 * DIST_FROM_BASE) * i / (NUMBER_OF_OBSTACLES + 1)
             print x_pos
-            yield ObstacleLine(200, 50, x_pos, texture=self.textures['obstacle'])
+            obstacle = ObstacleLine(200, 50, x_pos, texture=self.textures['obstacle'])
+            #self.collision_manager.add(obstacle)
+            yield obstacle
 
     def create_bases(self):
-        return [Base("left", LIVES, self.textures['red'], self.textures['green'], self.window.height, self.window.width),
+        bases = [Base("left", LIVES, self.textures['red'], self.textures['green'], self.window.height, self.window.width),
                 Base("right", LIVES, self.textures['red'], self.textures['green'], self.window.height, self.window.width)]
+
+        for base in bases:
+            self.collision_manager.add(base)
+
+        return bases
 
 
 if __name__ == '__main__':

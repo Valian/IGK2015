@@ -2,6 +2,7 @@ import sfml as sf
 import random
 from matplotlib.mlab import distances_along_curve
 from animation import Animation, AnimatedSprite
+from collisions import Collidable
 
 
 LEFT_SIDE = 1
@@ -25,7 +26,7 @@ class PlayerManager(object):
 
         self.players_by_key = {}
 
-    def handle_event(self, event):
+    def handle_event(self, event, collision_manager):
         if not isinstance(event, sf.KeyEvent):
             return
 
@@ -33,12 +34,13 @@ class PlayerManager(object):
         if player:
             player.jump()
         else:
-            self.create_player(event.code)
+            self.create_player(event.code, collision_manager)
 
-    def create_player(self, key):
+    def create_player(self, key, collision_manager):
         side = 1 if len(self.players_by_key) % 2 == 0 else -1
         starting_pos = (self.left_pos if side > 0 else self.right_pos, random.randint(self.min_y, self.max_y))
         self.players_by_key[key] = Player(self.speed * side, starting_pos, self.texture, self.window_rect)
+        collision_manager.add(self.players_by_key[key])
 
     def update(self, elapsed_time):
         for key, player in self.players_by_key.iteritems():
@@ -49,7 +51,7 @@ class PlayerManager(object):
             player.render(window)
 
 
-class Player(object):
+class Player(Collidable):
 
     def __init__(self, speed, starting_position, texture, window_rectangle):
         self.window_rectangle = window_rectangle
@@ -77,6 +79,16 @@ class Player(object):
         self.is_dead = False
         self.jump_time = None
         self.plane_jumped = False
+
+    def get_bounding_rects(self):
+        if self.is_dead:
+            return sf.Rectangle()
+        else:
+            return self.plane.global_bounds
+
+    def collide(self, other):
+        print "collision with " + str(other)
+        self.reset()
 
     def jump(self):
 
