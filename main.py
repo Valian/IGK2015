@@ -7,7 +7,7 @@ from utils import *
 from animation import *
 from obstacle import ObstacleLine
 
-WWIDTH, WHEIGHT = 800, 1000
+WWIDTH, WHEIGHT = 550, 700
 WTITLE = "IGK 2015"
 SETTINGS = sf.ContextSettings()
 SETTINGS.antialiasing_level = 8
@@ -30,7 +30,7 @@ class Game:
 
         # Loading assets
         self.textures = self.load_assets()
-        self.bg = create_sprite(self.textures['bg'], WWIDTH, WHEIGHT)
+        self.bg = create_sprite(self.textures['bg'], WWIDTH, WHEIGHT, (0,0))
 
         self.obstacles = self.create_obstacles()
 
@@ -57,7 +57,7 @@ class Game:
     def render(self):
         self.window.clear()
 
-        #self.window.draw(self.bg)
+        self.window.draw(self.bg)
         for obstacle in self.obstacles:
             obstacle.render(self.window)
 
@@ -74,7 +74,9 @@ class Game:
             sys.exit(1)
 
     def create_obstacles(self):
-        obstacles = [ObstacleLine(10, 100, 200, texture=self.textures['obstacle'])]
+        obstacles = [ObstacleLine(200, 50, 100, texture=self.textures['obstacle']),
+                     ObstacleLine(300, 50, 200, texture=self.textures['obstacle'])]
+
         return obstacles
 
 
