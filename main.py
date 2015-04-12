@@ -16,7 +16,7 @@ WWIDTH, WHEIGHT = 1200, 750
 WTITLE = "IGK 2015"
 NUMBER_OF_OBSTACLES = 3
 DIST_FROM_BASE = 100
-SPEED = 500
+SPEED = 200
 
 SETTINGS = sf.ContextSettings()
 SETTINGS.antialiasing_level = 8
@@ -126,8 +126,8 @@ class Game:
         for i in xrange(1, NUMBER_OF_OBSTACLES + 1):
             x_pos = DIST_FROM_BASE + (WWIDTH * 1.0 - 2 * DIST_FROM_BASE) * i / (NUMBER_OF_OBSTACLES + 1)
             print x_pos
-            obstacle = ObstacleLine(random.randint(20, 60), 50, x_pos, texture=self.textures['obstacle'])
-            #self.collision_manager.add(obstacle)
+            obstacle = ObstacleLine(random.randint(20, 80), 50, x_pos, texture=self.textures['obstacle'])
+            self.collision_manager.add(obstacle)
             yield obstacle
 
     def create_bases(self):

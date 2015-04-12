@@ -8,7 +8,7 @@ minFragCount = 4
 minRectHeight = 200
 maxRectHeight = 300
 minSpace = 100
-maxSpace = 150
+maxSpace = 200
 start_y_position = -100
 end_y_position_offset = 100
 

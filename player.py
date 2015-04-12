@@ -11,7 +11,7 @@ RIGHT_SIDE = 2
 
 PADDING = 50
 
-GRAVITY = 10.0
+GRAVITY = 20.0
 
 
 class PlayerManager(object):
@@ -90,7 +90,7 @@ class Player(Collidable):
         else:
             p = self.plane.position
             s = self.plane.size
-            return sf.Rectangle((p.x - s.x / 2, p.y - s.y/2), (s.x / 2, s.y/2))
+            return sf.Rectangle((p.x - s.x / 3, p.y - s.y / 3), (s.x / 1.5, s.y/1.5))
 
     def collide(self, other):
         if isinstance(other, ObstacleLine) or (isinstance(other, Player) and self.direction != other.direction):
@@ -127,17 +127,17 @@ class Player(Collidable):
             return
 
         if not self.plane_jumped and (self.plane.rotation <= 60 or self.plane.rotation >= 300):
-            self.plane.rotate(1.25)
+            self.plane.rotate(1.25 * self.direction)
 
         if self.plane_jumped:
-            self.plane_speed.y = -150.0
+            self.plane_speed.y = -200.0
 
             if self.jump_time.elapsed_time.seconds < 0.25:
                 self.plane.rotate(-2.5 * self.direction)
             else:
                 self.plane_jumped = False
                 self.jump_time = None
-            if self.plane.rotation * self.direction % 300 > 60:
+            if self.plane.rotation % 300 > 60:
                 self.plane.rotation = (300, 60)[self.plane.rotation * self.direction > 300]
 
         if self.plane_speed.y <= 50 * GRAVITY:
